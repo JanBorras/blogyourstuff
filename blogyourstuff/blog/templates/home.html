@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="card" style="background-color: #EDEDED;">
+      <div class="card-body">
+        <h2 class="card-title">Latest Blog Posts</h2>
+        
+        {% for post in blog_posts %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h3 class="card-title"><a href="{% url 'post_details' post.id %}">{{ post.title }}</a></h3>
+              <p class="card-text">{{ post.content }}</p>
+              <p class="card-text"><small class="text-muted">Posted on: {{ post.date_posted }}</small></p>
+              <p class="card-text"><small class="text-muted">Posted by: {{ post.author.first_name }} {{ post.author.last_name }}</small></p>
+              
+              {% if user.is_staff %}
+                <form method="get" action="{% url 'delete_blog_post' post.id %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm">Delete Post</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        
+        <!-- Pagination links -->
+        <div class="pagination">
+          <span class="step-links">
+            {% if blog_posts.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ blog_posts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+              Page {{ blog_posts.number }} of {{ blog_posts.paginator.num_pages }}.
+            </span>
+
+            {% if blog_posts.has_next %}
+              <a href="?page={{ blog_posts.next_page_number }}">next</a>
+              <a href="?page={{ blog_posts.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+          </span>
+        </div>
+
+        <!-- Button to create a new post -->
+        <a href="{% url 'create_blog_post' %}" class="btn btn-primary mt-3">Create New Post</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

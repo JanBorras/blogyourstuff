@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db
+    image: mysql:8.2
+    command: --default-authentication-plugin=caching_sha2_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+    volumes:
+      - ./persistent/database:/var/lib/mysql
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - local
+    healthcheck:
+      test: ["CMD", "curl", "-f", "db:${MYSQL_PORT}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  blogyourstuff:
+    container_name: "blogyourstuff"
+    build:
+      context: ./
+      dockerfile: ./blogyourstuff/Dockerfile
+      args:
+        - HOST_GID=${HOST_GID}
+        - HOST_UID=${HOST_UID}
+        - CONTAINER_USER=${CONTAINER_USER}
+        - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+        - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+        - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+        - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+        - DJANGO_DEBUG=${DJANGO_DEBUG}
+        - DJANGO_MEDIA_DIR=${DJANGO_MEDIA_DIR}
+        - DJANGO_PORT=${DJANGO_PORT}
+    working_dir: /blogyourstuff
+    volumes:
+      - ../blogyourstuff:/blogyourstuff
+      - ./persistent/media:/media
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - local
+    ports:
+      - ${DJANGO_PORT}:${DJANGO_PORT}
+
+networks:
+  local:
+    driver: bridge

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ post.title }}</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ post.content }}</p>
+            <p class="card-text"><small class="text-muted">Posted on: {{ post.date_posted }}</small></p>
+            <p class="card-text"><small class="text-muted">Posted by: {{ post.author.first_name }} {{ post.author.last_name }}</small></p>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Go Back</a>
+            
+            {% if user == post.author or user.is_staff and user.is_authenticated %}
+                <form method="get" action="{% url 'delete_blog_post' post.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete Post</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

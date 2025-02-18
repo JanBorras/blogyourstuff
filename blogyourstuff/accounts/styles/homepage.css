@@ -1,0 +1,26 @@
+body {
+    padding-top: 56px;
+    padding-bottom: 56px;
+    margin: 0;
+}
+
+.content {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 112px);
+}
+
+.fixed-top,
+.fixed-bottom {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.fixed-top {
+    top: 0;
+}
+
+.fixed-bottom {
+    bottom: 0;
+}
