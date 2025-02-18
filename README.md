@@ -87,14 +87,14 @@ Usually we would be able to find the application running into [localhost:8000](h
 
 # Features:
 
-    User Authentication: Enables users to register, log in, and manage their accounts securely.
-    CRUD Functionality: Allows users to create, read, update, and delete blog posts.
-    Responsive Design: Ensures optimal viewing across various devices.
+- User Authentication: Enables users to register, log in, and manage their accounts securely.
+- CRUD Functionality: Allows users to create, read, update, and delete blog posts.
+- Responsive Design: Ensures optimal viewing across various devices.
 
 # Tech Stack:
 
-    Backend: Django
-    Frontend: Django Templates
-    Deployment: Docker and Docker Compose
+- Backend: Django
+- Frontend: Django Templates
+- Deployment: Docker and Docker Compose
 
 
